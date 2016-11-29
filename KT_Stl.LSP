@@ -17,7 +17,7 @@
 )
 
 
-(setq KTS_version 1.31)
+(setq KTS_version 1.32)
 (vl-load-com)
 
 (defun C:KT_stl ( /  Test *Error*) 			;localize error handler
@@ -3424,9 +3424,9 @@ tmp
 	)
 
 	(setq scriptfile (findfile "KT_dl.vbs")) ;calls external VBScript to kill Excel instance
-	(startapp (strcat "CSCRIPT.EXE //nologo " (vl-prin1-to-string scriptfile) " " (vl-prin1-to-string "http://www.kitek.be/data/kts_version.txt")))
+	(startapp (strcat "CSCRIPT.EXE //nologo " (vl-prin1-to-string scriptfile) " " (vl-prin1-to-string "https://raw.githubusercontent.com/JoakinKirschen/kitek_steel/master/kts_version.txt")))
 	(setq count 0)
-	(while (and (<= count 30)(not (findfile tempfile)))	(KTS_wait 1)(princ "/")(setq count (+ count 1))	)
+	(while (and (<= count 10)(not (findfile tempfile)))	(KTS_wait 1)(princ "/")(setq count (+ count 1))	)
 	
 	(if (findfile tempfile)
 	(progn
