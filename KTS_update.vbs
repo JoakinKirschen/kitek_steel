@@ -35,7 +35,7 @@ Wscript.Echo "Downloading update"
 dim myPath, a, filename
 dim xHttp: Set xHttp = createobject("MSXML2.ServerXMLHTTP.3.0")
 
-Url = Wscript.Arguments.Item(7)
+Url = Wscript.Arguments.Item(2)
 
 a=split(Url,"/")
 filename=a(ubound(a))
