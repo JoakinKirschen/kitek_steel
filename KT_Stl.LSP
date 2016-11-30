@@ -3461,6 +3461,7 @@ tmp
   (setq Temp (getenv "Temp"))
   (setq KTSPathSource (strcat (getenv "Temp") "\\KiTek_Steel"))
   (setq KTSPathDest (vl-filename-directory (findfile "KT_Stl.lin")))
+  (setq scriptfile (findfile "KTS_update.vbs"))
   (startapp (strcat "CSCRIPT.EXE //nologo " (vl-prin1-to-string scriptfile)
 ;     " " (vl-prin1-to-string LabPathSource)
      " " (vl-prin1-to-string KTSPathDest)
@@ -3515,7 +3516,7 @@ tmp
 ;  (alert "Update Successful.\nPlease restart Autocad.")
 ;  (exit)
 ;  (princ)
-;)
+)
 
 (defun KTS_DeleteFolder (path / fso)
   (if (and (setq fso (vlax-get-or-create-object "Scripting.FileSystemObject"))
