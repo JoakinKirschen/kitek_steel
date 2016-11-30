@@ -17,7 +17,7 @@
 )
 
 
-(setq KTS_version 1.31)
+(setq KTS_version 1.32)
 (vl-load-com)
 
 (defun C:KT_stl ( /  Test *Error*) 			;localize error handler
@@ -3462,12 +3462,15 @@ tmp
   (setq KTSPathSource (strcat (getenv "Temp") "\\KiTek_Steel"))
   (setq KTSPathDest (vl-filename-directory (findfile "KT_Stl.lin")))
   (setq scriptfile (findfile "KTS_update.vbs"))
+  (princ "\nClosing Kitek Steel")  
+  (princ "\nClosing AutoCad")
   (startapp (strcat "CSCRIPT.EXE //nologo " (vl-prin1-to-string scriptfile)
 ;     " " (vl-prin1-to-string LabPathSource)
      " " (vl-prin1-to-string KTSPathDest)
      " " (vl-prin1-to-string Temp)
      " " (vl-prin1-to-string "https://github.com/JoakinKirschen/kitek_steel/archive/master.zip")
      ))
+  (exit)
 ;  (if (vl-file-directory-p KTSPathDest)
 ;  (progn
 ;  (if (vl-file-directory-p KTSPathSource)
