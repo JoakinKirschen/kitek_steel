@@ -202,45 +202,45 @@ slotpos
 	
 )
 
-(defun KTS_downllicence (subpath / )
-(setq scriptfile (findfile "KT_dl.vbs")) 
-(startapp (strcat "CSCRIPT.EXE //nologo " (vl-prin1-to-string scriptfile) " " (vl-prin1-to-string (strcat "http://www.kitek.be/" subpath "/licence.vlx"))))
-)
+;(defun KTS_downllicence (subpath / )
+;(setq scriptfile (findfile "KT_dl.vbs")) 
+;(startapp (strcat "CSCRIPT.EXE //nologo " (vl-prin1-to-string scriptfile) " " (vl-prin1-to-string (strcat "http://www.kitek.be/" subpath "/licence.vlx"))))
+;)
 
-(defun KTS_confirmlicence ( / lic)
-(setq LicCode 999999)
-(if (getenv "lkey")
-	(progn
-		(setq subpath (substr (getenv "lkey") 1 4)) 
-		(if (findfile "licence.vlx")
-			(progn (if (not licence.vlx)(load "licence.vlx"))(setq LicCode (KTS_LicCode)))
-			(progn 
-				(KTS_downllicence subpath)
-				(if (not licence.vlx)
-					(if (findfile "licence.vlx")
-						(progn (load "licence.vlx")(setq LicCode (KTS_LicCode)))
-						(progn (princ "No correct licence file found on registration server.\nPlease enter new licence code") (KTS_enterlicence))
-					)
-					(setq LicCode (KTS_LicCode))
-				)
-			)
-		)
-		(if (= (getenv "lkey") LicCode)
-			(progn 
-					(if (< KTS_LicExpireDate (atoi (rtos (getvar "CDATE") 2 0)))
-						3 ;licence expired
-						1 ;vallid licence
-					)
-			)
-			0 ;invallid licence
-		)
-	)
-	(progn
-	0 ;invallid licence
-	)
-);
-(princ)
-)
+;(defun KTS_confirmlicence ( / lic)
+;(setq LicCode 999999)
+;(if (getenv "lkey")
+;	(progn
+;		(setq subpath (substr (getenv "lkey") 1 4)) 
+;		(if (findfile "licence.vlx")
+;			(progn (if (not licence.vlx)(load "licence.vlx"))(setq LicCode (KTS_LicCode)))
+;			(progn 
+;				(KTS_downllicence subpath)
+;				(if (not licence.vlx)
+;					(if (findfile "licence.vlx")
+;						(progn (load "licence.vlx")(setq LicCode (KTS_LicCode)))
+;						(progn (princ "No correct licence file found on registration server.\nPlease enter new licence code") (KTS_enterlicence))
+;					)
+;					(setq LicCode (KTS_LicCode))
+;				)
+;			)
+;		)
+;		(if (= (getenv "lkey") LicCode)
+;			(progn 
+;					(if (< KTS_LicExpireDate (atoi (rtos (getvar "CDATE") 2 0)))
+;						3 ;licence expired
+;						1 ;vallid licence
+;					)
+;			)
+;			0 ;invallid licence
+;		)
+;	)
+;	(progn
+;	0 ;invallid licence
+;	)
+;);
+;(princ)
+;)
 
 (defun KT_dialog (/ Dcl_Id% ddiag prestring Radio1$ Radio2$ Value1$ Value2$ Value3$ Value4$ Value5$ Image1$ Value6$ Toggle2$ Return# list1@ mainlist subitems ddiag temp anglist Laylist LayNewCo LayNewHi LayExCo LayExHi ColNewCo ColNewHi ColExCo ColNewHi ColExCo ColExHi LtNewCo LtNewHi LtExCo LtExHi LwNewCo LwNewHi LwExCo LwExHi Modetilelist)
 (setvar "cmdecho" 0)
@@ -2892,7 +2892,7 @@ LtExCo LtExHi LwNewCo LwNewHi LwExCo LwExHi snap en eo paramCol p v bNameNew *er
   (setq KTSFileSource (strcat (getenv "Temp") "\\banner.slb"))
   (setq KTSFileDest (strcat (vl-filename-directory (findfile "KT_Stl.lin"))"\\banner.slb"))
   
-  (setq scriptfile (findfile "KT_dl.vbs")) 
+  (setq scriptfile (create_dlvbs)) 
   (startapp (strcat "CSCRIPT.EXE //nologo " (vl-prin1-to-string scriptfile) " " (vl-prin1-to-string "http://www.kitek.be/data/banner.slb")))
   
   (setq count 0)
@@ -2908,6 +2908,7 @@ LtExCo LtExHi LwNewCo LwNewHi LwExCo LwExHi snap en eo paramCol p v bNameNew *er
   ) 
     
   (vl-file-delete KTSFileDest)
+  (vl-file-delete scriptfile)
   (vl-file-copy KTSFileSource KTSFileDest T)
   (setenv "KTS_Datestamp2" (vl-prin1-to-string  (atoi (substr (rtos (getvar "CDATE") 2 0) 1 8)) ))
   )
@@ -3423,7 +3424,7 @@ tmp
 		(vl-file-delete tempfile)
 	)
 
-	(setq scriptfile (findfile "KT_dl.vbs")) ;calls external VBScript to kill Excel instance
+	(setq scriptfile (create_dlvbs)) ;calls external VBScript to kill Excel instance
 	(startapp (strcat "CSCRIPT.EXE //nologo " (vl-prin1-to-string scriptfile) " " (vl-prin1-to-string "https://raw.githubusercontent.com/JoakinKirschen/kitek_steel/master/kts_version.txt")))
 	(setq count 0)
 	(while (and (<= count 10)(not (findfile tempfile)))	(KTS_wait 1)(princ "/")(setq count (+ count 1))	)
@@ -3436,6 +3437,7 @@ tmp
 		(close fp)
 		(setq lst (reverse lst))
     )
+	(vl-file-delete scriptfile)
 	(if (/= lst nil) 
 	(progn
 	(setq newverint  (atof (nth 0 lst)))
@@ -3461,7 +3463,7 @@ tmp
   (setq Temp (getenv "Temp"))
   (setq KTSPathSource (strcat (getenv "Temp") "\\KiTek_Steel"))
   (setq KTSPathDest (vl-filename-directory (findfile "KT_Stl.lin")))
-  (setq scriptfile (findfile "KTS_update.vbs"))
+  (setq scriptfile (create_updvbs))
   (princ "\nClosing Kitek Steel")  
   (princ "\nClosing AutoCad")
   (startapp (strcat "CSCRIPT.EXE //nologo " (vl-prin1-to-string scriptfile)
@@ -4026,5 +4028,195 @@ tmp
 (setq stop (+ (getvar "DATE") (/ seconds 86400.0)))
 (while (> stop (getvar "DATE")))
 );defun
+
+(defun create_dlvbs ()
+
+;(vl-file-delete "KT_Temp.vbs")
+(setq fname (vl-filename-mktemp "KT_Temp.vbs"))
+
+(setq fn (open fname "w"))
+
+(write-line "Set args = WScript.Arguments
+ 
+dim Url, myPath, a, filename
+dim xHttp: Set xHttp = createobject(\"MSXML2.ServerXMLHTTP.3.0\")
+dim bStrm: Set bStrm = createobject(\"Adodb.Stream\")
+Const TemporaryFolder = 2
+
+Url = Wscript.Arguments.Item(0)
+
+a=split(Url,\"/\")
+filename=a(ubound(a))
+
+Set objFSO = CreateObject( \"Scripting.FileSystemObject\" )
+
+myPath = objFSO.GetSpecialFolder(TemporaryFolder) & \"/\" & filename 
+
+xHttp.Open \"GET\", Url, False
+xHttp.Send
+ 
+with bStrm
+    .type = 1 '//binary
+    .open
+    .write xHttp.responseBody
+    .savetofile myPath, 2 '//overwrite
+end with
+
+ " fn)
+
+(close fn)
+
+fname
+
+)
+
+(defun create_updvbs ()
+
+;(vl-file-delete "KT_Temp.vbs")
+(setq fname (vl-filename-mktemp "KT_Temp.vbs"))
+
+(setq fn (open fname "w"))
+
+(write-line "Set args = WScript.Arguments
+ 
+'// you can get url via parameter like line below
+'//Url = args.Item(0)
+Dim oShell : Set oShell = CreateObject(\"WScript.Shell\")
+Dim fso : Set fso = CreateObject(\"Scripting.FileSystemObject\")
+
+Dim KTSPathDest, Temp, UserPath, PlotPath, PMPPath, PlotStyles, Plotters, sTemp, iTemp1, Url
+
+Const TemporaryFolder = 2
+
+oShell.Run \"taskkill /im acad.exe\", 1, True
+
+iTemp1 = 0
+
+set service = GetObject (\"winmgmts:\")
+
+Do while iTemp1 = 0
+	iTemp1 = 1
+	for each Process in Service.InstancesOf (\"Win32_Process\")
+		If Process.Name = \"acad.exe\" then
+			iTemp1 = 0
+			Wscript.Sleep (500)
+		End If
+	next
+loop
+
+Wscript.Echo \"AutoCad has been closed\"
+
+bslash = Chr(92)
+dblbslash = Chr(92) & Chr(92)
+
+'LabPathSource = (Replace(Wscript.Arguments.Item(0),dblbslash,bslash))
+KTSPathDest = (Replace(Wscript.Arguments.Item(0),dblbslash,bslash))
+Temp = (Replace(Wscript.Arguments.Item(1),dblbslash,bslash))
+
+Wscript.Echo \"Downloading update\"
+'//Download zip from GitHub
+dim myPath, a, filename
+dim xHttp: Set xHttp = createobject(\"MSXML2.ServerXMLHTTP.3.0\")
+
+Url = Wscript.Arguments.Item(2)
+
+a=split(Url,\"/\")
+filename=a(ubound(a))
+
+myPath = fso.GetSpecialFolder(TemporaryFolder) & \"/\" & filename 
+
+xHttp.Open \"GET\", Url, False
+xHttp.Send
+
+'Wscript.Echo \"Download-Status: \" ^& xHttp.Status ^& \" \" ^& xHttp.statusText
+ 
+If xHttp.Status = 200 Then
+    Dim objStream
+    set objStream = CreateObject(\"ADODB.Stream\")
+    objStream.Type = 1 'adTypeBinary
+    objStream.Open
+    objStream.Write xHttp.responseBody
+    objStream.SaveToFile myPath,2
+    objStream.Close
+    set objStream = Nothing
+End If
+set xHttp=Nothing
+
+Wscript.Echo \"Download complete\"
+
+'//Delete existing version
+
+Wscript.Echo \"Deleting existing KTS folder\"
+Const ReadOnly = 1
+'Set fso = CreateObject(“Scripting.fsotemObject”)
+Set objFolder = fso.GetFolder(KTSPathDest)
+Set colFiles = objFolder.Files
+For Each objFile in colFiles
+    If objFile.Attributes AND ReadOnly Then
+        objFile.Attributes = objFile.Attributes XOR ReadOnly
+    End If
+Next
+
+If fso.FolderExists(KTSPathDest) Then  
+    fso.DeleteFolder KTSPathDest, True
+End If 
+
+'//Extract new version
+Wscript.Echo \"Extracting new version\"
+'The location of the zip file.
+ExtractTo=fso.GetSpecialFolder(TemporaryFolder) 
+ZipFile=ExtractTo & bslash & filename 
+
+Set objFolder = fso.GetFolder(ExtractTo)
+Set colFiles = objFolder.Files
+For Each objFile in colFiles
+    If objFile.Attributes AND ReadOnly Then
+        objFile.Attributes = objFile.Attributes XOR ReadOnly
+    End If
+Next
+
+ExtractFolder = ExtractTo & \"\kitek_steel-master\"
+
+If fso.FolderExists(ExtractFolder) Then
+   fso.DeleteFolder ExtractFolder, True
+End If
+'If NOT fso.FolderExists(ExtractTo) Then
+'   fso.CreateFolder(ExtractTo)
+'End If
+
+'Extract the contants of the zip file.
+set objShell = CreateObject(\"Shell.Application\")
+set FilesInZip = objShell.NameSpace(ZipFile).items
+objShell.NameSpace(ExtractTo).CopyHere(FilesInZip)
+Set objShell = Nothing
+
+CopySource=fso.GetSpecialFolder(TemporaryFolder) & \"\kitek_steel-master\"
+
+Wscript.Echo \"Copying new version\"
+If fso.FolderExists(CopySource) Then 
+    fso.CopyFolder CopySource, KTSPathDest 
+End If
+
+Parrent = fso.GetParentFolderName(PlotPath) & bslash
+
+'MsgBox(Parrent)
+
+Wscript.Echo \"Cleanup installation\"
+
+If fso.FolderExists(ExtractFolder) Then
+   fso.DeleteFolder ExtractFolder, True
+End If
+
+fso.DeleteFile(fso.GetSpecialFolder(TemporaryFolder) & bslash & filename) 'Deletes the file throught the DeleteFile function
+
+Set fso = Nothing
+
+MsgBox(\"Update Successful\")" fn)
+
+(close fn)
+
+fname
+
+)
 
 (princ)
