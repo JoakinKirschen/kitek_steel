@@ -4115,8 +4115,7 @@ Temp = (Replace(Wscript.Arguments.Item(1),dblbslash,bslash))
 " fn)
 
 
-(write-line "Set args = WScript.Arguments
-Wscript.Echo \"Downloading update\"
+(write-line "Wscript.Echo \"Downloading update\"
 '//Download zip from GitHub
 dim myPath, a, filename
 dim xHttp: Set xHttp = createobject(\"MSXML2.ServerXMLHTTP.3.0\")
@@ -4165,7 +4164,7 @@ If fso.FolderExists(KTSPathDest) Then
 End If 
 " fn)
 
-(write-line "Set args = WScript.Arguments
+(write-line "
 '//Extract new version
 Wscript.Echo \"Extracting new version\"
 'The location of the zip file.
@@ -4180,7 +4179,7 @@ For Each objFile in colFiles
     End If
 Next
 
-ExtractFolder = ExtractTo & \"\kitek_steel-master\"
+ExtractFolder = ExtractTo & \"\\kitek_steel-master\"
 
 If fso.FolderExists(ExtractFolder) Then
    fso.DeleteFolder ExtractFolder, True
@@ -4195,7 +4194,7 @@ set FilesInZip = objShell.NameSpace(ZipFile).items
 objShell.NameSpace(ExtractTo).CopyHere(FilesInZip)
 Set objShell = Nothing
 
-CopySource=fso.GetSpecialFolder(TemporaryFolder) & \"\kitek_steel-master\"
+CopySource=fso.GetSpecialFolder(TemporaryFolder) & \"\\kitek_steel-master\"
 
 Wscript.Echo \"Copying new version\"
 If fso.FolderExists(CopySource) Then 
