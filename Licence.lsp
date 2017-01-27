@@ -1,5 +1,5 @@
 (KTS_LicIdentifier ()
-"Paperclip08121982"
+"BlaBlaBla08121982"
 (princ)
 )
 
