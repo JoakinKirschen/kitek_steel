@@ -4112,7 +4112,10 @@ dblbslash = Chr(92) & Chr(92)
 'LabPathSource = (Replace(Wscript.Arguments.Item(0),dblbslash,bslash))
 KTSPathDest = (Replace(Wscript.Arguments.Item(0),dblbslash,bslash))
 Temp = (Replace(Wscript.Arguments.Item(1),dblbslash,bslash))
+" fn)
 
+
+(write-line "Set args = WScript.Arguments
 Wscript.Echo \"Downloading update\"
 '//Download zip from GitHub
 dim myPath, a, filename
@@ -4160,7 +4163,9 @@ Next
 If fso.FolderExists(KTSPathDest) Then  
     fso.DeleteFolder KTSPathDest, True
 End If 
+" fn)
 
+(write-line "Set args = WScript.Arguments
 '//Extract new version
 Wscript.Echo \"Extracting new version\"
 'The location of the zip file.
