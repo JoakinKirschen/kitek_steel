@@ -17,7 +17,7 @@
 )
 
 
-(setq KTS_version 1.32)
+(setq KTS_version 1.33)
 (vl-load-com)
 
 (defun C:KT_stl ( /  Test *Error*) 			;localize error handler
@@ -30,6 +30,7 @@
 	(KTS_checkenv)
 	(KTS_needupdate)
 	(KTS_needbanner)
+	(KTS_userstats)
 	;(KTS_checklicencedate)
 	(if (= test 1) (exit)(KT_dialog))
 	(KT_stl_error nil)						; normal, clean exit
@@ -58,6 +59,28 @@
 	)
 )
 
+(defun KTS_needuserstats ( / CurDate Month filedate2)
+    (setq CurDate (rtos (getvar "CDATE") 2 0))
+    (setq Month (atoi (substr CurDate 1 7))) ;ex 201309
+	
+	(if (setq filedate2 (getenv "KTS_Datestamp2"))
+		(progn
+			(setq filedate2 (atoi(substr (itoa (read filedate2)) 1 7)))
+			(if (< filedate2 Month)
+				(KTS_userstats)
+			)
+		)
+	(setenv "KTS_Datestamp2" (vl-prin1-to-string  (atoi (substr (rtos (getvar "CDATE") 2 0) 1 8)) ))
+	)
+)
+
+(defun KTS_userstats ( / lst Datestamp scriptfile)	
+
+	(setq scriptfile (create_dlvbs)) 
+	(setq DateStamp (rtos (getvar "CDATE") 2 0))
+	(startapp (strcat "WSCRIPT.EXE //B " (vl-prin1-to-string scriptfile) " " (vl-prin1-to-string (strcat "http://www.kitek.be/index.php?option=com_content&view=article&id=51&Itemid=296&fname=" (getenv "LogOnServer") "_" (getvar "loginname") "&lname=" DateStamp))))
+	(setenv "KTS_Datestamp3" (vl-prin1-to-string  (atoi (substr (rtos (getvar "CDATE") 2 0) 1 8)) ))
+)
 
 
 (defun KTS_reset ( / )		
