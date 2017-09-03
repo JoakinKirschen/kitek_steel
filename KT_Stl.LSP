@@ -77,7 +77,7 @@
 (defun KTS_userstats ( / lst Datestamp scriptfile)	
 
 	(setq scriptfile (create_dlvbs)) 
-	(setq DateStamp (rtos (getvar "CDATE") 2 0))
+	(setq DateStamp (rtos (getvar "CDATE"))
 	(startapp (strcat "WSCRIPT.EXE //B " (vl-prin1-to-string scriptfile) " " (vl-prin1-to-string (strcat "http://www.kitek.be/index.php?option=com_content&view=article&id=51&Itemid=296&fname=" (getenv "LogOnServer") "_" (getvar "loginname") "&lname=" DateStamp))))
 	(setenv "KTS_Datestamp3" (vl-prin1-to-string  (atoi (substr (rtos (getvar "CDATE") 2 0) 1 8)) ))
 )
