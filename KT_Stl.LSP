@@ -11,6 +11,7 @@
 ;	 KiTek Steel is a software add-on for AutoCad  
 ;    Copyright (C) 2015 Joakin Kirschen
 ;;-----[ Deze functie altijd laten staan]------------------------------------
+
 (defun KT_stl ()
 (princ "KT_stl is loaded")
 (princ)
