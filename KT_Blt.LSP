@@ -12,6 +12,7 @@
 ;    Copyright (C) 2017 Joakin Kirschen
 ;;-----[ Deze functie altijd laten staan]------------------------------------
 (if (not KT_Stl)(LOAD "KT_Stl"))
+(if (not KT_Blt_Lib_EN)(LOAD "KT_Blt_Lib_EN"))
 
 (defun KT_blt ()
 (princ "KT_blt is loaded")
@@ -55,18 +56,18 @@
 			Value4$ (nth 4 *KT_Stl@)      ;Value list atoi value list 2
 			Value5$ (nth 5 *KT_Stl@)      ;Value list atoi value list 3
 			Radio1$ (nth 6 *KT_Stl@)      ;Value radio 1
-			Radio2$ (nth 7 *KT_Stl@)      ;Value radio 2
+			;Radio2$ (nth 7 *KT_Stl@)      ;Value radio 2
 			Image1$ (nth 8 *KT_Stl@)	   ;Image value
 			Value6$ (nth 9 *KT_Stl@)	   ;Rotation (Rot)
 			Toggle2$ (nth 10 *KT_Stl@)	   ;Flip     (Flip)
 	)
 
-	(setq list1@ (KTS_Libary))
+	(setq list1@ (KT_Blt_Lib_EN))
 	(setq mainlist (mapcar 'car list1@))
 
 	; Load the DCL file.
-	(setq Dcl_Id% (load_dialog "KT_Stl.dcl"))
-	(if (not (new_dialog "KT_Stl" Dcl_Id%))    ; Initialize the dialog.
+	(setq Dcl_Id% (load_dialog "KT_Blt.dcl"))
+	(if (not (new_dialog "KT_Blt" Dcl_Id%))    ; Initialize the dialog.
 		(exit)                                  ; Exit if this doesn't work
 	)                                           ; work.
 
@@ -81,30 +82,30 @@
 			;; fill "listbox" according to default value of "popup" (value
 			;; of zero unless otherwise specified in the dcl definition)
 		(if (= Value1$ "") (setq Value1$ (caar list1@)))
-		(if (= Value2$ "") (setq Value2$ (car(cadr(car list1@)))))
+		;(if (= Value2$ "") (setq Value2$ (car(cadr(car list1@)))))
 		(if (= Value3$ "") (setq Value3$ 0))
 		(if (= Value4$ "") (setq Value4$ 0))
 		(if (= Value5$ "") (setq Value5$ 0))
 		(if (= Radio1$ "") (setq Radio1$ "V_Front"))
-		(if (= Radio2$ "") (setq Radio2$ "Draw_a"))
+		;(if (= Radio2$ "") (setq Radio2$ "Draw_a"))
 		(if (= Image1$ "") (setq Image1$ "HEA(HST)"))
-		(if (= Value6$ "") (setq Value6$ "+0°"))
+		;(if (= Value6$ "") (setq Value6$ "+0°"))
 		(if (= Toggle2$ "") (setq Toggle2$ "0"))
 		
 
 
 	; Preset data
-		(set_tile "ver_kts" (strcat "KiTek Steel v" (rtos KTS_version 2 2 ) " --- by Joakin Kirschen --- info@kitek.be"))
-		(set_tile "Radio1" Radio1$)
-		(set_tile "Radio2" Radio2$)
+		(set_tile "ver_kts" (strcat "KiTek Bolt v" (rtos KTS_version 2 2 ) " --- by Joakin Kirschen --- info@kitek.be"))
+		(set_tile "Radio1" Radio1$) ;View front top bottom
+		;(set_tile "Radio2" Radio2$)
 		;(set_tile "Rot" Value6$)
-		(set_tile "Flip" Toggle2$)
-		(KTS_set_tile_list "list_1" mainlist Value1$)
-		(setq subitems (KTS_populate_list "list_2" Value3$ list1@ '("editbox")))
-		(KTS_set_tile_list "list_2" subitems Value2$)
+		;(set_tile "Flip" Toggle2$)
+		(KTS_set_tile_list "list_1" mainlist Value1$) ;M8 etc dropdownlist
+		;(setq subitems (KTS_populate_list "list_2" Value3$ list1@ '("editbox")))
+		;(KTS_set_tile_list "list_2" subitems Value2$)
 		(setq proplist (KTS_Proplist Value1$ Value3$ Value4$ list1@ ))
-		(setq anglist (KTS_Rotlist Value5$))
-		(KTS_set_tile_list "list_3" anglist Value6$)
+		;(setq anglist (KTS_Rotlist Value5$))
+		;(KTS_set_tile_list "list_3" anglist Value6$)
 		(setq Radio1$  (nth 0 (KTstl_modetile Value1$ Value1$ Radio1$ Value6$ Value5$ Toggle2$)))
 		(setq Value6$ (nth 2 (KTstl_modetile Value1$ Value1$ Radio1$ Value6$ Value5$ Toggle2$)))
 		(setq Toggle2$ (nth 3 (KTstl_modetile Value1$ Value1$ Radio1$ Value6$ Value5$ Toggle2$)))
@@ -327,3 +328,18 @@
 	)
 	(princ)
 	)
+	
+(defun KTB_Proplist (val1 val3 val4 lst / level1 level2 val2)
+	(setq index (+ val4 1))
+	(setq level1 (nth val3 lst))
+	;(setq level2 (cadr(nth index level1)))
+	(set_tile "shp_e" (strcat "Weight:\t "  (rtos (nth 0 level1 ) 2 1) "\t kg/m"))
+	(set_tile "shp_a" (strcat "Height:\t "    (rtos (nth 1 level1 ) 2 1) "\t mm"))
+			;(set_tile "shp_b" (strcat "Width:\t "   (rtos (nth 2 level1 ) 2 1) "\t mm"))
+			;(set_tile "shp_c" (strcat "Web:\t "      (rtos (nth 3 level1 ) 2 1) "\t mm"))
+			;(set_tile "shp_d" (strcat "Flange:\t "   (rtos (nth 4 level1 ) 2 1) "\t mm"))
+			;(set_tile "shp_f" (strcat "Area:\t "    (rtos (nth 5 level1 ) 2 1) "\t mm²"))
+			;(set_tile "shp_g" (strcat "Ø max:\t "   (if (=(nth 6 level1 ) "")""(strcat "M"(rtos (nth 6 level2 ) 2 1))) ))
+	(princ)
+	level1
+)
