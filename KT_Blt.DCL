@@ -99,6 +99,7 @@ KT_Blt : dialog {
          alignment = centered;
 		 : row {
 		 width = 20;
+		 height = 1;
 		 alignment = centered;
 		 fixed_width = true;
          : image { 
@@ -108,15 +109,14 @@ KT_Blt : dialog {
          height = 9;
          alignment = centered;
 	 }}
-//      spacer;
-//      : text {
-//      label = "Rotate:";		//Text2$ from lsp file
-//      key = "Rot";		//Value2$ from lsp file
-//      }
+      spacer;
+      : text {
+      label = "";		//Text2$ from lsp file
+      }
 //	  : popup_list {
 //          key = "list_3";
 //         }
-//	  spacer;
+	  spacer;
 //      : toggle {
 //      fixed_width = true;
 //      label = "Flip";		//Text2$ from lsp file

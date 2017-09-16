@@ -238,12 +238,12 @@
 		(
 		(= Radio1$ "V_Section")
 		(Cond
-			((= Value1$ "M10") (KTB_run1 Value1$ Value2$ Radio1$ Radio2$ Value6$ Toggle2$ proplist prestring ddiag))
-			((= Value1$ "M12") (KTB_run1 Value1$ Value2$ Radio1$ Radio2$ Value6$ Toggle2$ proplist prestring ddiag))
-			((= Value1$ "M16") (KTB_run1 Value1$ Value2$ Radio1$ Radio2$ Value6$ Toggle2$ proplist prestring ddiag))
-			((= Value1$ "M20") (KTB_run1 Value1$ Value2$ Radio1$ Radio2$ Value6$ Toggle2$ proplist prestring ddiag))
-			((= Value1$ "M24") (KTB_run1 Value1$ Value2$ Radio1$ Radio2$ Value6$ Toggle2$ proplist prestring ddiag))
-			((= Value1$ "M30") (KTB_run1 Value1$ Value2$ Radio1$ Radio2$ Value6$ Toggle2$ proplist prestring ddiag))
+			((= Value1$ "M10") (KTB_run1 Value1$ Value2$ Radio1$ proplist prestring ddiag))
+			((= Value1$ "M12") (KTB_run1 Value1$ Value2$ Radio1$ proplist prestring ddiag))
+			((= Value1$ "M16") (KTB_run1 Value1$ Value2$ Radio1$ proplist prestring ddiag))
+			((= Value1$ "M20") (KTB_run1 Value1$ Value2$ Radio1$ proplist prestring ddiag))
+			((= Value1$ "M24") (KTB_run1 Value1$ Value2$ Radio1$ proplist prestring ddiag))
+			((= Value1$ "M30") (KTB_run1 Value1$ Value2$ Radio1$ proplist prestring ddiag))
 			(nil ())
 			)
 		)
@@ -386,7 +386,7 @@
 	sldName
 	)
 	
-	(defun KTB_run1 (proftype profile view draw rot flip props  prestring ddiag / ppt1 ppt2 ppt3 osv dist ang  iptx ipty bptx bpty ipt width height fl ang2)
+	(defun KTB_run1 (boltsize washer view props  prestring ddiag / ppt1 ppt2 ppt3 osv dist ang  iptx ipty bptx bpty ipt width height fl ang2)
 	(if (and (setq ppt1 (getpoint "\nFirst insertion point"))(setq ppt2 (getpoint ppt1 "\nSecond insertion point")))
 	(progn
 	(setq dist (distance ppt1 ppt2))
@@ -405,137 +405,32 @@
 	(setq bptx (car ppt1))
 	(setq bpty (cadr ppt1))
 	(setq fl 1)
-	(if (= flip "1")
-	(progn  (setq ang (+ ang 180)) (setq bptx (car ppt2)) (setq bpty (cadr ppt2)) (setq fl -1))
-	)
-
-	(Cond
-		((= view "V_Front") ;front
-		(progn
-		(Cond
-			((= draw "Draw_a") (progn   (setq ipty (-(+ bpty (*(sin ang2) 500 factor fl)) (*(cos ang2)(/ height 2) )))
-						(setq iptx   (+ bptx (*(cos ang2) 500 factor fl)  (*(sin ang2)(/ height 2) )))
-						)
-		)
-			((= draw "Draw_b") (progn   (setq iptx (+ bptx   (*(cos ang2) 500 factor fl)))
-						(setq ipty (+ bpty   (*(sin ang2) 500 factor fl)))
-					)
-		)
-			((= draw "Draw_c") (progn
-						(setq ipty (+(+ bpty (*(sin ang2) 500 factor fl)) (*(cos ang2)(/ height 2) )))
-						(setq iptx (-(+ bptx (*(cos ang2) 500 factor fl)) (*(sin ang2)(/ height 2) )))
-						)
-		)
-			(nil ())
-			)
+	(setq iptx (+ bptx   (*(cos ang2) 500 factor fl)))
+	(setq ipty (+ bpty   (*(sin ang2) 500 factor fl)))
+;	(setq ipty (+(+ bpty (*(sin ang2) 500 factor fl)) (*(cos ang2)(/ height 2) )))
+;	(setq iptx (-(+ bptx (*(cos ang2) 500 factor fl)) (*(sin ang2)(/ height 2) )))
 		(setq ipt (list iptx ipty))
-		(Cond
-		((= proftype "HEA") (KTS_InsDynBlock "HEA_FRONT" ipt ang (list (cons "Linear" dist) (cons "Lookup" profile)) prestring ddiag))
-		((= proftype "HEB") (KTS_InsDynBlock "HEB_FRONT" ipt ang (list (cons "Linear" dist) (cons "Lookup" profile)) prestring ddiag))
-		((= proftype "HEM") (KTS_InsDynBlock "HEM_FRONT" ipt ang (list (cons "Linear" dist) (cons "Lookup" profile)) prestring ddiag))
-		((= proftype "IPE") (KTS_InsDynBlock "IPE_FRONT" ipt ang (list (cons "Linear" dist) (cons "Lookup" profile)) prestring ddiag))
-		((= proftype "IPN") (KTS_InsDynBlock "IPN_FRONT" ipt ang (list (cons "Linear" dist) (cons "Lookup" profile)) prestring ddiag))
-		((= proftype "UPE") (KTS_InsDynBlock "UPE_FRONT" ipt ang (list (cons "Linear" dist) (cons "Lookup" profile)) prestring ddiag))
-		((= proftype "UPN") (KTS_InsDynBlock "UPN_FRONT" ipt ang (list (cons "Linear" dist) (cons "Lookup" profile)) prestring ddiag))
-		((= proftype "SHS") (KTS_InsDynBlock "SHS_FRONT" ipt ang (list (cons "Linear" dist) (cons "Lookup" profile)) prestring ddiag))
-		((= proftype "RHS") (KTS_InsDynBlock "RHS_FRONT" ipt ang (list (cons "Linear" dist) (cons "Lookup" profile)) prestring ddiag))
-		((= proftype "CHS") (KTS_InsDynBlock "CHS_FRONT" ipt ang (list (cons "Linear" dist) (cons "Lookup" profile)) prestring ddiag))
-		((= proftype "L GZ") (KTS_InsDynBlock "LGZ_FRONT" ipt ang (list (cons "Linear" dist) (cons "Lookup" (strcat "L " (rtos(nth 1 props)2 0)))(cons "Lookup1" (strcat "t " (rtos(nth 3 props)2 0)))) prestring ddiag))
-		((= proftype "L OZ") (KTS_InsDynBlock "LOZ_FRONT" ipt ang (list (cons "Linear" dist) (cons "Lookup" (strcat "L " (rtos(nth 1 props)2 0)))(cons "Lookup1" (strcat "t " (rtos(nth 3 props)2 0)))) prestring ddiag))
-		(nil ())
-		))
-		) ;end view a
-
-
-		((= view "V_Top") ;top
-		(progn
-		(Cond
-			((= draw "Draw_a") (progn   (setq ipty (-(+ bpty (*(sin ang2)500 factor fl)) (*(cos ang2)(/ width 2) )))
-						(setq iptx   (+ bptx (*(cos ang2)500 factor fl)  (*(sin ang2)(/ width 2) )))
-					)
-		)
-			((= draw "Draw_b") (progn   (setq iptx (+ bptx (*(cos ang2)500 factor fl)))
-						(setq ipty (+ bpty (*(sin ang2)500 factor fl)))
-					)
-		)
-			((= draw "Draw_c") (progn   (setq ipty (+(+ bpty (*(sin ang2)500 factor fl)) (*(cos ang2)(/ width 2) )))
-						(setq iptx (-(+ bptx (*(cos ang2)500 factor fl)) (*(sin ang2)(/ width 2) )))
-					)
-		)
-			(nil ())
-			)
-		(setq ipt (list iptx ipty))
-		(Cond
-		((= proftype "HEA") (KTS_InsDynBlock "HEA_TOP" ipt ang (list (cons "Linear" dist) (cons "Lookup" profile)) prestring ddiag))
-		((= proftype "HEB") (KTS_InsDynBlock "HEB_TOP" ipt ang (list (cons "Linear" dist) (cons "Lookup" profile)) prestring ddiag))
-		((= proftype "HEM") (KTS_InsDynBlock "HEM_TOP" ipt ang (list (cons "Linear" dist) (cons "Lookup" profile)) prestring ddiag))
-		((= proftype "IPE") (KTS_InsDynBlock "IPE_TOP" ipt ang (list (cons "Linear" dist) (cons "Lookup" profile)) prestring ddiag))
-		((= proftype "IPN") (KTS_InsDynBlock "IPN_TOP" ipt ang (list (cons "Linear" dist) (cons "Lookup" profile)) prestring ddiag))
-		((= proftype "UPE") (KTS_InsDynBlock "UPE_TOP" ipt ang (list (cons "Linear" dist) (cons "Lookup" profile)) prestring ddiag))
-		((= proftype "UPN") (KTS_InsDynBlock "UPN_TOP" ipt ang (list (cons "Linear" dist) (cons "Lookup" profile)) prestring ddiag))
-		((= proftype "RHS") (KTS_InsDynBlock "RHS_TOP" ipt ang (list (cons "Linear" dist) (cons "Lookup" profile)) prestring ddiag))		
-		((= proftype "L GZ") (KTS_InsDynBlock "LGZ_TOP" ipt ang (list (cons "Linear" dist) (cons "Lookup" (strcat "L " (rtos(nth 2 props)2 0)))(cons "Lookup1" (strcat "t " (rtos(nth 3 props)2 0)))) prestring ddiag))
-		((= proftype "L OZ") (KTS_InsDynBlock "LOZ_TOP" ipt ang (list (cons "Linear" dist) (cons "Lookup" (strcat "L " (rtos(nth 2 props)2 0)))(cons "Lookup1" (strcat "t " (rtos(nth 3 props)2 0)))) prestring ddiag))
-			(nil ())
-			)
-		)
-		) ;end view Top
-
-		((= view "V_Back")
-		(progn
-		(Cond
-			((= draw "Draw_a") (progn   (setq ipty (-(+ bpty (*(sin ang2)500 factor)) (*(cos ang2)(/ height 2) )))
-						(setq iptx   (+ bptx (*(cos ang2)500 factor)  (*(sin ang2)(/ height 2) )))
-		)
-			)
-			((= draw "Draw_b") (progn   (setq iptx (+ bptx (*(cos ang2)500 factor fl)))
-						(setq ipty (+ bpty (*(sin ang2)500 factor fl)))
-					)
-		)
-			((= draw "Draw_c") (progn   (setq ipty (+(+ bpty (*(sin ang2)500 factor)) (*(cos ang2)(/ height 2) )))
-						(setq iptx (-(+ bptx (*(cos ang2)500 factor)) (*(sin ang2)(/ height 2) )))
-						)
-		)
-			(nil ())
-			)
-		(setq ipt (list iptx ipty))
-		(Cond
-		((= proftype "UPE") (KTS_InsDynBlock "UPE_BACK" ipt ang (list (cons "Linear" dist) (cons "Lookup" profile)) prestring ddiag))
-		((= proftype "UPN") (KTS_InsDynBlock "UPN_BACK" ipt ang (list (cons "Linear" dist) (cons "Lookup" profile)) prestring ddiag))
-		((= proftype "L GZ") (KTS_InsDynBlock "LGZ_BACK" ipt ang (list (cons "Linear" dist) (cons "Lookup" (strcat "L " (rtos(nth 1 props)2 0)))(cons "Lookup1" (strcat "t " (rtos(nth 3 props)2 0)))) prestring ddiag))
-		((= proftype "L OZ") (KTS_InsDynBlock "LOZ_BACK" ipt ang (list (cons "Linear" dist) (cons "Lookup" (strcat "L " (rtos(nth 1 props)2 0)))(cons "Lookup1" (strcat "t " (rtos(nth 3 props)2 0)))) prestring ddiag))
-		(nil ())
-		))
-		) ;end view back
-		
-		((= view "V_Bottom")
-		(progn
-		(Cond
-			((= draw "Draw_a") (progn   (setq ipty (-(+ bpty (*(sin ang2)500 factor)) (*(cos ang2)(/ height 2) )))
-						(setq iptx   (+ bptx (*(cos ang2)500 factor)  (*(sin ang2)(/ height 2) )))
-		)
-			)
-			((= draw "Draw_b") (progn   (setq iptx (+ bptx (*(cos ang2)500 factor fl)))
-						(setq ipty (+ bpty (*(sin ang2)500 factor fl)))
-					)
-		)
-			((= draw "Draw_c") (progn   (setq ipty (+(+ bpty (*(sin ang2)500 factor)) (*(cos ang2)(/ height 2) )))
-						(setq iptx (-(+ bptx (*(cos ang2)500 factor)) (*(sin ang2)(/ height 2) )))
-						)
-		)
-			(nil ())
-			)
-		(setq ipt (list iptx ipty))
-		(Cond
-			((= proftype "L OZ") (KTS_InsDynBlock "LOZ_BOTTOM" ipt ang (list (cons "Linear" dist) (cons "Lookup" (strcat "L " (rtos(nth 2 props)2 0)))(cons "Lookup1" (strcat "t " (rtos(nth 3 props)2 0)))) prestring))
-			(nil ())
-			))
-		) ;end view back
+;		(Cond
+;		((= boltsize "HEA") (KTS_InsDynBlock "HEA_FRONT" ipt ang (list (cons "Linear" dist) (cons "Lookup" washer)) prestring ddiag))
+;		((= boltsize "HEB") (KTS_InsDynBlock "HEB_FRONT" ipt ang (list (cons "Linear" dist) (cons "Lookup" washer)) prestring ddiag))
+;		((= boltsize "HEM") (KTS_InsDynBlock "HEM_FRONT" ipt ang (list (cons "Linear" dist) (cons "Lookup" washer)) prestring ddiag))
+;		((= boltsize "IPE") (KTS_InsDynBlock "IPE_FRONT" ipt ang (list (cons "Linear" dist) (cons "Lookup" washer)) prestring ddiag))
+;		((= boltsize "IPN") (KTS_InsDynBlock "IPN_FRONT" ipt ang (list (cons "Linear" dist) (cons "Lookup" washer)) prestring ddiag))
+;		((= boltsize "UPE") (KTS_InsDynBlock "UPE_FRONT" ipt ang (list (cons "Linear" dist) (cons "Lookup" washer)) prestring ddiag))
+;		((= boltsize "UPN") (KTS_InsDynBlock "UPN_FRONT" ipt ang (list (cons "Linear" dist) (cons "Lookup" washer)) prestring ddiag))
+;		((= boltsize "SHS") (KTS_InsDynBlock "SHS_FRONT" ipt ang (list (cons "Linear" dist) (cons "Lookup" washer)) prestring ddiag))
+;		((= boltsize "RHS") (KTS_InsDynBlock "RHS_FRONT" ipt ang (list (cons "Linear" dist) (cons "Lookup" washer)) prestring ddiag))
+;		((= boltsize "CHS") (KTS_InsDynBlock "CHS_FRONT" ipt ang (list (cons "Linear" dist) (cons "Lookup" washer)) prestring ddiag))
+;		((= boltsize "L GZ") (KTS_InsDynBlock "LGZ_FRONT" ipt ang (list (cons "Linear" dist) (cons "Lookup" (strcat "L " (rtos(nth 1 props)2 0)))(cons "Lookup1" (strcat "t " (rtos(nth 3 props)2 0)))) prestring ddiag))
+;		((= boltsize "L OZ") (KTS_InsDynBlock "LOZ_FRONT" ipt ang (list (cons "Linear" dist) (cons "Lookup" (strcat "L " (rtos(nth 1 props)2 0)))(cons "Lookup1" (strcat "t " (rtos(nth 3 props)2 0)))) prestring ddiag))
+;		(nil ())
+;		)
+	(KTS_InsDynBlock "BOLT" ipt ang (list (cons "Linear" dist) (cons "Lookup" washer)) prestring ddiag))	
 		
 	)	  ;end cond
 	)
 	(exit)
-	)
+	
 	(princ)
 	)				;end run 1
 
