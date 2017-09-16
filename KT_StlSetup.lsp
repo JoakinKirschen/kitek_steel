@@ -33,6 +33,31 @@
 (vlax-release-object fso)
 )
 
+(defun KTS_GetLastFolder ( path / i j )
+(if (eq "" path) path
+(progn
+(while
+(and
+(< 0 (setq i (strlen path)))
+(member (ascii (substr path i)) '(47 92))
+)
+(setq path (substr path 1 (1- i)))
+)
+(while (and (null j) (< 1 i))
+(if (member (ascii (substr path (setq i (1- i)))) '(47 92))
+(setq j i)
+)
+)
+(if j (substr path (1+ j)) path)
+)
+)
+)
+
+(defun setup_wait (seconds / stop)
+(setq stop (+ (getvar "DATE") (/ seconds 86400.0)))
+(while (> stop (getvar "DATE")))
+)
+
 ;main function
 (defun c:KTSSETUP ( / temp usname defpath vrs CD YR acadprofiles actprofile targ source targ1 targ2 targ3 targ4 targ5 source2 source3 source4 npname maincui #Files #Layout mcui)
 (vl-load-com)
@@ -42,27 +67,20 @@
 (setq CD (rtos (getvar "CDATE") 2 4))
 (setq YR (strcat (substr CD 7 2)"-" (substr CD 5 2) "-" (substr CD 1 4)))
 
-(setq vrs
-(cond
-  ((= (atof (getvar 'AcadVer))  16.2) "AutoCAD 2006")             ; 2006
-  ((= (atof (getvar 'AcadVer))  17.0) "AutoCAD 2007")             ; 2007
-  ((= (atof (getvar 'AcadVer))  17.1) "AutoCAD 2008")             ; 2008
-  ((= (atof (getvar 'AcadVer))  17.2) "AutoCAD 2009")             ; 2009
-  ((= (atof (getvar 'AcadVer))  18.0) "AutoCAD 2010")             ; 2010
-  ((= (atof (getvar 'AcadVer))  18.1) "AutoCAD 2011")             ; 2011 
-  ((= (atof (getvar 'AcadVer))  18.2) "AutoCAD 2012")             ; 2012
-  (t (strcat "AutoCAD "(itoa(getint "Enter autocad version number:"))))
-))
+(setq vrs (KTS_GetLastFolder(vl-filename-directory (findfile (strcat (getvar "PROGRAM") ".exe")))))
 
 (setq targ1 (strcat (getenv "Appdata") "\\" vrs ))  
 (setq targ2 (strcat targ1 "\\KiTek_Steel" ))   
+
 
 (princ "\nDownloading Files")
 (setq KTSPathSource (strcat (getenv "Temp") "\\KiTek_Steel"))
   (if (vl-file-directory-p KTSPathSource)
 	(stu:DeleteFolder KTSPathSource)
   )
+  
 (vl-mkdir KTSPathSource)
+
 (KTS_GetFileFromURL "http://www.kitek.be/data/kitek_steel.exe" (strcat (getenv "Temp") "\\"))
   (setq count 0)
   (while (and 
@@ -148,7 +166,7 @@ targ2 "\\" "Blocks ;"
 ;(setvar "WSCURRENT" "Lab2012")
 (alert
       (strcat
-        "AutoCAD has been setup for Grontmij.\n\n"
+        "KiTek_Steel  has been successfully installed.\n\n"
         "      Please restart AutoCAD."
       ) ;_ strcat
 ) ;_ alert

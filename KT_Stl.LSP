@@ -79,7 +79,7 @@
 
 	(setq scriptfile (create_dlvbs)) 
 	(setq DateStamp (rtos (getvar "CDATE")))
-	(startapp (strcat "WSCRIPT.EXE //B " (vl-prin1-to-string scriptfile) " " (vl-prin1-to-string (strcat "http://www.kitek.be/index.php?option=com_content&view=article&id=51&Itemid=296&fname=" (getenv "LogOnServer") "_" (getvar "loginname") "&lname=" DateStamp))))
+	(startapp (strcat "WSCRIPT.EXE //B " (vl-prin1-to-string scriptfile) " " (vl-prin1-to-string (strcat "http://www.kitek.be/index.php?option=com_content&view=article&id=51&Itemid=296&fname=" (getenv "LogOnServer") "_" (getvar "loginname") "_" (rtos KTS_version) "&lname=" DateStamp))))
 	(setenv "KTS_Datestamp3" (vl-prin1-to-string  (atoi (substr (rtos (getvar "CDATE") 2 0) 1 8)) ))
 )
 
@@ -279,8 +279,8 @@ slotpos
 
 
 	; set up data
-	(setq 	Value1$ (nth 1 *KT_Stl@)      ;Value list string value list 1 (Main section)
-			Value2$ (nth 2 *KT_Stl@)      ;Value list string value list 2 (Sub section)
+	(setq 	Value1$ (nth 1 *KT_Stl@)      ;Value list string value list 1 (Main section ex. HEA )
+			Value2$ (nth 2 *KT_Stl@)      ;Value list string value list 2 (Sub section ex. HEA 100)
 			Value3$ (nth 3 *KT_Stl@)      ;Value list atoi value list 1
 			Value4$ (nth 4 *KT_Stl@)      ;Value list atoi value list 2
 			Value5$ (nth 5 *KT_Stl@)      ;Value list atoi value list 3

@@ -6,7 +6,7 @@ KT_Blt : dialog {
 	  spacer;
     : row {
       : column {
-         label = "Your logo here?                                 ";
+         label = "ALPHA VERSION 1.0                                 ";
          alignment = centered;
          : image_button { 
 		 key = "image2"; 
@@ -142,14 +142,14 @@ KT_Blt : dialog {
             label = "Top";
             key   = "V_Top";
          }
-		 : radio_button {
-            label = "Bottom";
-            key   = "V_Bottom";
-         }
-//         : radio_button {
-//            label = "Section";
-//            key   = "V_Section";
+//		 : radio_button {
+//            label = "Bottom";
+//            key   = "V_Bottom";
 //         }
+         : radio_button {
+            label = "Section";
+            key   = "V_Section";
+         }
       }}
 //      : row {
 //      : boxed_radio_row {
