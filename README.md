@@ -15,7 +15,7 @@ Instalation requirements:
 - Windows XP / Windows VISTA / Windows 7 / Windows 10 / Windows 11. Both 32 and 64bit systems are supported.
 
 Instalation instructions:
-1) Download KiTek Steel zip and extract the files onto your hard drive at the disired location. 
+1) Download KiTekSteel.zip from the code dropdown and extract the files onto your hard drive at the disired location. 
 Make sure you have reading and writing permissions in the folder where you extracted the program files. 
 For example "c:\*username*\documents\autocad\KitekSteel"
 
